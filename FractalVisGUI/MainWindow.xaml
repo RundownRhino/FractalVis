@@ -1,0 +1,77 @@
+﻿<Window x:Class="FractalVisGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        ResizeMode="CanResize"
+        Icon="mandelbrot_icon.png"
+        mc:Ignorable="d"
+        Title="FractalVis" Height="900" Width="1200">
+
+    <Grid
+        x:Name="theGrid"
+        MouseDown="Grid_MouseDown"
+        MouseUp="Grid_MouseUp"
+        MouseMove="Grid_MouseMove"
+        Background="Transparent">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Canvas Name="ImageCanvas">
+            <Image Name="ImageViewer1" Stretch="None"
+                   Width="{Binding ActualWidth, ElementName=ImageCanvas}"
+                   Height="{Binding ActualHeight, ElementName=ImageCanvas}" />
+            <Rectangle
+                x:Name="selectionBox"
+                Visibility="Collapsed"
+                Stroke="White"
+                StrokeThickness="1" />
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                    <Label Background="White" Foreground="LawnGreen">MaxIters</Label>
+                    <TextBox Name="MaxIters" Background="White" Foreground="Black"
+                             Width="50"
+                             PreviewTextInput="MaxIters_OnPreviewTextInput"
+                             PreviewKeyDown="OnParamInputChanged">
+                        100
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Background="White" Foreground="LawnGreen">Horizon</Label>
+                    <TextBox Name="Horizon" Background="White" Foreground="Black"
+                             Width="50"
+                             PreviewTextInput="Horizon_OnPreviewTextInput"
+                             PreviewKeyDown="OnParamInputChanged">
+                        2.0
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Background="White" Foreground="LawnGreen">Shades</Label>
+                    <TextBox Name="Shades" Background="White" Foreground="Black"
+                             Width="50"
+                             PreviewTextInput="Shades_OnPreviewTextInput"
+                             PreviewKeyDown="OnParamInputChanged"
+                             MaxLength="3">
+                        32
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton Name="Colored"
+                                  Background="LawnGreen"
+                                  IsChecked="False"
+                                  Checked="Colored_OnToggle"
+                                  Unchecked="Colored_OnToggle">
+                        Colored
+                    </ToggleButton>
+                </StackPanel>
+            </StackPanel>
+
+        </Canvas>
+        <TextBox Grid.Column="1"
+                 x:Name="TestBox" />
+    </Grid>
+
+</Window>

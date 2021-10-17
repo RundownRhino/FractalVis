@@ -6,3 +6,6 @@ Was messily ported from .NET 4.0 to 4.7.2, which is why there are still mentions
 # Build Instructions
 1. Do `cargo build --release` in `fractals` to build the Rust dll.
 2. Build the C# solution, which should automatically link to the dll in `fractals/target/release`.
+
+# Usage
+Left mouse button drag to select a region to zoom on. Right mouse button drag to select a region to zoom out on (the zoom will be adjusted so that the current viewport is projected into the rectangle selected). Middle mouse button to reset to default zoom. In some cases, the fractal doesn't render on program start; middle mouse button fixes that.

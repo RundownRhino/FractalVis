@@ -88,6 +88,10 @@
         <None Include="App.config" />
     </ItemGroup>
     <ItemGroup>
+      <Content Include="..\fractals\target\release\fractal_calculator.dll">
+        <Link>fractal_calculator.dll</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="mandelbrot_icon.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

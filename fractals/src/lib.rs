@@ -58,9 +58,7 @@ pub extern "C" fn calculate_mandelbrot_vec_colored(
         Viewport::new(x_min, x_max, y_min, y_max, width, height),
         max_iters,
         horison,
-        from_angle,
-        to_angle,
-        saturation,
+        ColorSettings::new(from_angle, to_angle, saturation),
     );
     arr.into_raw_vec().into()
 }

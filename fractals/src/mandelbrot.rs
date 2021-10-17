@@ -1,8 +1,7 @@
-use crate::{Viewport, C, F};
+use crate::{ColorSettings, Viewport, C, F};
 
 use ndarray::{Array2, Array3};
 use ndarray::{Axis, Zip};
-use palette::{encoding::Srgb, Hsv, LinSrgb};
 
 #[inline]
 fn mandelbrot_point(x: F, y: F, max_iters: u32, horison_sq: F) -> (bool, u32) {
@@ -49,22 +48,16 @@ pub fn calculate_mandelbrot_colored(
     viewport: Viewport,
     max_iters: u32,
     horison: F,
-    from_angle: f32,
-    to_angle: f32,
-    saturation: f32,
+    color_settings: ColorSettings,
 ) -> Array3<u8> {
-    assert!((0.0..=1.0f32).contains(&saturation));
+    assert!((0.0..=1.0f32).contains(&color_settings.saturation));
     let horison_sq = horison.powi(2);
     let mut img: Array3<u8> = Array3::zeros((viewport.height as usize, viewport.width as usize, 3));
     Zip::indexed(img.lanes_mut(Axis(2))).par_for_each(|(i, j), mut el| {
         let (x, y) = viewport.transform(i, j);
         let (converged, iter) = mandelbrot_point(x, y, max_iters, horison_sq);
         if !converged {
-            let color: f32 =
-                ((iter as f32 / max_iters as f32) * (to_angle - from_angle) + from_angle) % 360f32; // hue in degrees
-            let pxl: Hsv<Srgb, f32> = Hsv::from_components((color, saturation, 1f32));
-            let float_rgb = LinSrgb::from(pxl);
-            let rgb: LinSrgb<u8> = float_rgb.into_format();
+            let rgb = color_settings.color_from(iter as f32 / max_iters as f32);
             el[0] = rgb.red;
             el[1] = rgb.green;
             el[2] = rgb.blue;

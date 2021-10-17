@@ -9,16 +9,20 @@ fn main() {
     let x_max = 2.0;
     let y_min = -2.0;
     let y_max = 2.0;
+
     let size_exp = 13;
     let width: u32 = 2u32.pow(size_exp); // 5s on debug for 10, 38s on release for 14.
     let height: u32 = width;
+
     let max_iters = 100;
     let horison = 1e-6;
+
     let from_angle = 0f32;
     let to_angle = 300f32; //magenta
     let saturation = 1.0f32;
 
     let k = 7;
+    
     let roots: Vec<_> = (0..k)
         .map(|j| {
             Complex::exp(Complex::new(

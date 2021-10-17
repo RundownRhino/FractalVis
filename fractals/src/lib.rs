@@ -2,6 +2,9 @@ pub mod structs;
 pub use structs::*;
 pub mod utils;
 
+pub mod ffi;
+use ffi::*;
+
 pub mod mandelbrot;
 
 pub mod newton;
@@ -9,36 +12,11 @@ pub mod polynomial;
 
 pub mod visualization;
 
-use std::mem;
-
 use mandelbrot::{calculate_mandelbrot, calculate_mandelbrot_colored};
 use num_complex::Complex;
 
 type F = f64;
 type C = Complex<F>;
-
-#[repr(C)]
-pub struct FFIVec<T> {
-    pub ptr: *mut T,
-    pub len: u64,
-    pub cap: u64,
-}
-impl<T> From<Vec<T>> for FFIVec<T> {
-    fn from(vec: Vec<T>) -> Self {
-        Self::new(vec)
-    }
-}
-impl<T> FFIVec<T> {
-    pub fn new(mut x: Vec<T>) -> Self {
-        let s = Self {
-            ptr: x.as_mut_ptr(),
-            len: x.len() as u64,
-            cap: x.capacity() as u64,
-        };
-        mem::forget(x);
-        s
-    }
-}
 
 #[no_mangle]
 pub extern "C" fn calculate_mandelbrot_vec(

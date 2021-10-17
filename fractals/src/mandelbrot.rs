@@ -1,4 +1,4 @@
-use crate::{C, F};
+use crate::{Viewport, C, F};
 
 use ndarray::{Array2, Array3};
 use ndarray::{Axis, Zip};
@@ -22,12 +22,7 @@ fn mandelbrot_point(x: F, y: F, max_iters: u32, horison_sq: F) -> (bool, u32) {
 }
 
 pub fn calculate_mandelbrot(
-    x_min: F,
-    x_max: F,
-    y_min: F,
-    y_max: F,
-    width: u32,
-    height: u32,
+    viewport: Viewport,
     max_iters: u32,
     horison: F,
     shades_max: u8,
@@ -35,15 +30,14 @@ pub fn calculate_mandelbrot(
     assert!(shades_max >= 1);
     let horison_sq = horison.powi(2);
     let fun = |(i, j), el: &mut u8| {
-        let y = y_min + (i as F) * ((y_max - y_min) as F / height as F);
-        let x = x_min + (j as F) * ((x_max - x_min) as F / width as F);
+        let (x, y) = viewport.transform(i, j);
         let (converged, iter) = mandelbrot_point(x, y, max_iters, horison_sq);
         if !converged {
             let color: u8 = (iter as u8 % shades_max) * (255 / shades_max);
             *el = color;
         }
     };
-    let mut img: Array2<u8> = Array2::zeros((height as usize, width as usize));
+    let mut img: Array2<u8> = Array2::zeros((viewport.height as usize, viewport.width as usize));
     Zip::indexed(&mut img).par_for_each(fun);
     img
 }
@@ -52,12 +46,7 @@ pub fn calculate_mandelbrot(
 /// from_angle and to_angle determine the span of hue as iterations to
 /// divergence change from 0 to max_iters.
 pub fn calculate_mandelbrot_colored(
-    x_min: F,
-    x_max: F,
-    y_min: F,
-    y_max: F,
-    width: u32,
-    height: u32,
+    viewport: Viewport,
     max_iters: u32,
     horison: F,
     from_angle: f32,
@@ -66,10 +55,9 @@ pub fn calculate_mandelbrot_colored(
 ) -> Array3<u8> {
     assert!((0.0..=1.0f32).contains(&saturation));
     let horison_sq = horison.powi(2);
-    let mut img: Array3<u8> = Array3::zeros((height as usize, width as usize, 3));
+    let mut img: Array3<u8> = Array3::zeros((viewport.height as usize, viewport.width as usize, 3));
     Zip::indexed(img.lanes_mut(Axis(2))).par_for_each(|(i, j), mut el| {
-        let y = y_min + (i as F) * ((y_max - y_min) as F / height as F);
-        let x = x_min + (j as F) * ((x_max - x_min) as F / width as F);
+        let (x, y) = viewport.transform(i, j);
         let (converged, iter) = mandelbrot_point(x, y, max_iters, horison_sq);
         if !converged {
             let color: f32 =

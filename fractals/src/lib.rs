@@ -31,7 +31,10 @@ pub extern "C" fn calculate_mandelbrot_vec(
     shades_max: u8,
 ) -> FFIVec<u8> {
     let arr = calculate_mandelbrot(
-        x_min, x_max, y_min, y_max, width, height, max_iters, horison, shades_max,
+        Viewport::new(x_min, x_max, y_min, y_max, width, height),
+        max_iters,
+        horison,
+        shades_max,
     );
     arr.into_raw_vec().into()
 }
@@ -52,7 +55,11 @@ pub extern "C" fn calculate_mandelbrot_vec_colored(
     saturation: f32,
 ) -> FFIVec<u8> {
     let arr = calculate_mandelbrot_colored(
-        x_min, x_max, y_min, y_max, width, height, max_iters, horison, from_angle, to_angle,
+        Viewport::new(x_min, x_max, y_min, y_max, width, height),
+        max_iters,
+        horison,
+        from_angle,
+        to_angle,
         saturation,
     );
     arr.into_raw_vec().into()

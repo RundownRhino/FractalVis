@@ -22,7 +22,7 @@ impl Viewport {
             height,
         }
     }
-
+    /// Transform pixel coordinates (j,i) to an (x,y) position.
     pub fn transform(&self, i: usize, j: usize) -> (F, F) {
         let y = self.y_min + (i as F) * ((self.y_max - self.y_min) as F / self.height as F);
         let x = self.x_min + (j as F) * ((self.x_max - self.x_min) as F / self.width as F);

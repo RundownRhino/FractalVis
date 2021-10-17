@@ -34,13 +34,13 @@ namespace FractalVisGUI
             uint maxIters;
             double horizon;
             byte shadesMax;
-            uint roots_count;
+            uint rootsCount;
             FractalKind kind;
             try {
                 maxIters = uint.Parse(MaxIters.Text);
                 horizon = double.Parse(Horizon.Text);
                 shadesMax = byte.Parse(Shades.Text);
-                roots_count = uint.Parse(PolyRootNumber.Text);
+                rootsCount = uint.Parse(PolyRootNumber.Text);
                 kind = FractalKind.Of(FractalKindChosen.Text); //FIXME
             }
             catch (Exception e) when (e is FormatException || e is OverflowException) {
@@ -77,7 +77,7 @@ namespace FractalVisGUI
                     _xMin, _xMax, _yMin, _yMax,
                     (uint) width, (uint) height,
                     maxIters, horizon,
-                    roots_count,
+                    rootsCount,
                     fromAngle, toAngle, saturation));
                 bitmap = Visualization.ArrToRGB(vec, (uint) width, (uint) height);
             }
@@ -113,16 +113,16 @@ namespace FractalVisGUI
             // Capture and track the mouse.
             _mouseDown = true;
             _mouseDownPos = e.GetPosition(ImageCanvas);
-            theGrid.CaptureMouse();
+            TheGrid.CaptureMouse();
 
             // Initial placement of the drag selection box.         
-            Canvas.SetLeft(selectionBox, _mouseDownPos.X);
-            Canvas.SetTop(selectionBox, _mouseDownPos.Y);
-            selectionBox.Width = 0;
-            selectionBox.Height = 0;
+            Canvas.SetLeft(SelectionBox, _mouseDownPos.X);
+            Canvas.SetTop(SelectionBox, _mouseDownPos.Y);
+            SelectionBox.Width = 0;
+            SelectionBox.Height = 0;
 
             // Make the drag selection box visible.
-            selectionBox.Visibility = Visibility.Visible;
+            SelectionBox.Visibility = Visibility.Visible;
         }
 
         private (double width, double height) Get_Viewport_Size() {
@@ -146,10 +146,10 @@ namespace FractalVisGUI
 
             // Release the mouse capture and stop tracking it.
             _mouseDown = false;
-            theGrid.ReleaseMouseCapture();
+            TheGrid.ReleaseMouseCapture();
 
             // Hide the drag selection box.
-            selectionBox.Visibility = Visibility.Collapsed;
+            SelectionBox.Visibility = Visibility.Collapsed;
 
             Point mouseUpPos = e.GetPosition(ImageCanvas);
             var xPosMin = Math.Min(_mouseDownPos.X, mouseUpPos.X);
@@ -189,21 +189,21 @@ namespace FractalVisGUI
             Point mousePos = e.GetPosition(ImageCanvas);
 
             if (_mouseDownPos.X < mousePos.X) {
-                Canvas.SetLeft(selectionBox, _mouseDownPos.X);
-                selectionBox.Width = mousePos.X - _mouseDownPos.X;
+                Canvas.SetLeft(SelectionBox, _mouseDownPos.X);
+                SelectionBox.Width = mousePos.X - _mouseDownPos.X;
             }
             else {
-                Canvas.SetLeft(selectionBox, mousePos.X);
-                selectionBox.Width = _mouseDownPos.X - mousePos.X;
+                Canvas.SetLeft(SelectionBox, mousePos.X);
+                SelectionBox.Width = _mouseDownPos.X - mousePos.X;
             }
 
             if (_mouseDownPos.Y < mousePos.Y) {
-                Canvas.SetTop(selectionBox, _mouseDownPos.Y);
-                selectionBox.Height = mousePos.Y - _mouseDownPos.Y;
+                Canvas.SetTop(SelectionBox, _mouseDownPos.Y);
+                SelectionBox.Height = mousePos.Y - _mouseDownPos.Y;
             }
             else {
-                Canvas.SetTop(selectionBox, mousePos.Y);
-                selectionBox.Height = _mouseDownPos.Y - mousePos.Y;
+                Canvas.SetTop(SelectionBox, mousePos.Y);
+                SelectionBox.Height = _mouseDownPos.Y - mousePos.Y;
             }
         }
 

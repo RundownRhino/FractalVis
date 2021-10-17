@@ -10,7 +10,7 @@
         Title="FractalVis" Height="900" Width="1200">
 
     <Grid
-        x:Name="theGrid"
+        x:Name="TheGrid"
         MouseDown="Grid_MouseDown"
         MouseUp="Grid_MouseUp"
         MouseMove="Grid_MouseMove"
@@ -24,7 +24,7 @@
                    Width="{Binding ActualWidth, ElementName=ImageCanvas}"
                    Height="{Binding ActualHeight, ElementName=ImageCanvas}" />
             <Rectangle
-                x:Name="selectionBox"
+                x:Name="SelectionBox"
                 Visibility="Collapsed"
                 Stroke="White"
                 StrokeThickness="1" />

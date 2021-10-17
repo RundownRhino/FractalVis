@@ -14,6 +14,7 @@ namespace FractalVisGUI
             return wbm;
         }
 
+        // ReSharper disable once InconsistentNaming
         public static BitmapSource ArrToRGB(byte[] array, uint w, uint h) {
             var format = PixelFormats.Rgb24;
             // var wbm = new WriteableBitmap((int) w, (int) h, 96, 96, format,

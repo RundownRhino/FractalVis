@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -229,10 +228,6 @@ namespace FractalVisGUI
 
         private void Shades_OnPreviewTextInput(object sender, TextCompositionEventArgs e) {
             e.Handled = !byte.TryParse(((TextBox) sender).Text + e.Text, out _);
-        }
-
-        private void Colored_OnToggle(object sender, RoutedEventArgs e) {
-            OnParamChanged();
         }
     }
 

@@ -2,13 +2,12 @@ use crate::{C, F};
 
 use ndarray::{Array2, Array3};
 use ndarray::{Axis, Zip};
-use num_complex::Complex;
 use palette::{encoding::Srgb, Hsv, LinSrgb};
 
 #[inline]
 fn mandelbrot_point(x: F, y: F, max_iters: u32, horison_sq: F) -> (bool, u32) {
-    let c: C = Complex::new(x, y);
-    let mut z: C = Complex::default();
+    let c: C = C::new(x, y);
+    let mut z: C = C::default();
     let mut converged = true;
     let mut iter: u32 = 0;
     while iter < max_iters {

@@ -15,6 +15,8 @@ pub mod visualization;
 use mandelbrot::{calculate_mandelbrot, calculate_mandelbrot_colored};
 use num_complex::Complex;
 
+use crate::newton::calculate_newton;
+
 type F = f64;
 type C = Complex<F>;
 
@@ -59,6 +61,42 @@ pub extern "C" fn calculate_mandelbrot_vec_colored(
         max_iters,
         horison,
         ColorSettings::new(from_angle, to_angle, saturation),
+    );
+    arr.into_raw_vec().into()
+}
+
+/// Returns an RGB image as a vector.
+#[no_mangle]
+pub extern "C" fn calculate_newton_roots_of_unity(
+    x_min: F,
+    x_max: F,
+    y_min: F,
+    y_max: F,
+    width: u32,
+    height: u32,
+
+    max_iters: u32,
+    horison: F,
+    k: usize,
+
+    from_angle: f32,
+    to_angle: f32,
+    saturation: f32,
+) -> FFIVec<u8> {
+    let roots: Vec<_> = (0..k)
+        .map(|j| {
+            Complex::exp(Complex::new(
+                0.0,
+                j as f64 / k as f64 * std::f64::consts::TAU,
+            ))
+        })
+        .collect();
+    let arr = calculate_newton(
+        Viewport::new(x_min, x_max, y_min, y_max, width, height),
+        ColorSettings::new(from_angle, to_angle, saturation),
+        &roots,
+        max_iters,
+        horison,
     );
     arr.into_raw_vec().into()
 }

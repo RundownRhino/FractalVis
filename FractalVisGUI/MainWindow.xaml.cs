@@ -70,7 +70,7 @@ namespace FractalVisGUI
             }
             else if (kind == FractalKind.Newton) {
                 float fromAngle = 0;
-                float toAngle = 300;
+                float toAngle = 360;
                 float saturation = 1;
                 var vec = FFI.FFIVecToArr(FFI.calculate_newton_roots_of_unity_vec(
                     _xMin, _xMax, _yMin, _yMax,

@@ -1,6 +1,5 @@
-use fractal_calculator::{
-    newton::calculate_newton, visualization::array_to_image_rgb, ColorSettings, Viewport,
-};
+use fractal_calculator::{newton::calculate_newton, visualization::array_to_image_rgb};
+use fractal_calculator::{ColorSettings, Viewport};
 use num_complex::Complex;
 
 use std::time::Instant;

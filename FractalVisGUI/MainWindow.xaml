@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fractalVisGui="clr-namespace:FractalVisGUI"
         ResizeMode="CanResize"
         Icon="mandelbrot_icon.png"
         mc:Ignorable="d"
@@ -59,13 +60,24 @@
                     </TextBox>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <ToggleButton Name="Colored"
-                                  Background="LawnGreen"
-                                  IsChecked="False"
-                                  Checked="Colored_OnToggle"
-                                  Unchecked="Colored_OnToggle">
-                        Colored
-                    </ToggleButton>
+                    <Label Background="White" Foreground="LawnGreen">PolyRootNumber</Label>
+                    <TextBox Name="PolyRootNumber" Background="White" Foreground="Black"
+                             Width="50"
+                             PreviewTextInput="Shades_OnPreviewTextInput"
+                             PreviewKeyDown="OnParamInputChanged"
+                             MaxLength="3">
+                        3
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <fractalVisGui:FractalKinds x:Key="FractalKinds" />
+                    </StackPanel.Resources>
+                    <ComboBox Name="FractalKindChosen"
+                              ItemsSource="{StaticResource FractalKinds}"
+                              SelectedItem="Mandelbrot (grayscale)"
+                              IsEditable="False"
+                              IsReadOnly="True" />
                 </StackPanel>
             </StackPanel>
 

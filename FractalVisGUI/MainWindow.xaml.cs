@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -30,12 +34,14 @@ namespace FractalVisGUI
             uint maxIters;
             double horizon;
             byte shadesMax;
-            bool colored;
+            uint roots_count;
+            FractalKind kind;
             try {
                 maxIters = uint.Parse(MaxIters.Text);
                 horizon = double.Parse(Horizon.Text);
                 shadesMax = byte.Parse(Shades.Text);
-                colored = Colored.IsChecked ?? false;
+                roots_count = uint.Parse(PolyRootNumber.Text);
+                kind = FractalKind.Of(FractalKindChosen.Text); //FIXME
             }
             catch (Exception e) when (e is FormatException || e is OverflowException) {
                 Console.WriteLine($@"Failed to parse values: {e.Message}, {e.TargetSite}.");
@@ -44,7 +50,7 @@ namespace FractalVisGUI
 
             Console.WriteLine($@"Recalculating to viewport of x: {_xMin:F} to {_xMax:F}, y: {_yMin:F} to {_yMax:F}.");
             BitmapSource bitmap;
-            if (colored) {
+            if (kind == FractalKind.MandelbrotColored) {
                 float fromAngle = 0;
                 float toAngle = 300;
                 float saturation = 1;
@@ -55,7 +61,7 @@ namespace FractalVisGUI
                     fromAngle, toAngle, saturation));
                 bitmap = Visualization.ArrToRGB(vec, (uint) width, (uint) height);
             }
-            else {
+            else if (kind == FractalKind.MandelbrotGrayscale) {
                 var vec = FFI.FFIVecToArr(FFI.calculate_mandelbrot_vec(
                     _xMin, _xMax, _yMin, _yMax,
                     (uint) width, (uint) height,
@@ -63,6 +69,22 @@ namespace FractalVisGUI
                     shadesMax));
                 bitmap = Visualization.ArrToGrayscale(vec, (uint) width, (uint) height);
             }
+            else if (kind == FractalKind.Newton) {
+                float fromAngle = 0;
+                float toAngle = 300;
+                float saturation = 1;
+                var vec = FFI.FFIVecToArr(FFI.calculate_newton_roots_of_unity_vec(
+                    _xMin, _xMax, _yMin, _yMax,
+                    (uint) width, (uint) height,
+                    maxIters, horizon,
+                    roots_count,
+                    fromAngle, toAngle, saturation));
+                bitmap = Visualization.ArrToRGB(vec, (uint) width, (uint) height);
+            }
+            else {
+                throw new ArgumentException("This should be impossible - kind is not of one of the handled types.");
+            }
+
 
             ImageViewer1.Source = bitmap;
         }
@@ -211,6 +233,42 @@ namespace FractalVisGUI
 
         private void Colored_OnToggle(object sender, RoutedEventArgs e) {
             OnParamChanged();
+        }
+    }
+
+    internal class FractalKinds : ObservableCollection<string>
+    {
+        public FractalKinds() {
+            foreach (var x in FractalKind.FractalKinds) {
+                Add(x.Name);
+            }
+        }
+    }
+
+    class FractalKind
+    {
+        public readonly string Name;
+
+        public FractalKind(string name) {
+            this.Name = name;
+        }
+
+        public static readonly FractalKind MandelbrotGrayscale = new FractalKind("Mandelbrot (grayscale)");
+        public static readonly FractalKind MandelbrotColored = new FractalKind("Mandelbrot (colored)");
+        public static readonly FractalKind Newton = new FractalKind("Newton");
+
+        public static readonly List<FractalKind> FractalKinds = new List<FractalKind> {
+            MandelbrotGrayscale, MandelbrotColored, Newton
+        };
+
+        public static FractalKind Of(string name) => FractalKinds.First(x => x.Name == name);
+
+        protected bool Equals(FractalKind other) {
+            return Name == other.Name;
+        }
+
+        public override int GetHashCode() {
+            return (Name != null ? Name.GetHashCode() : 0);
         }
     }
 }

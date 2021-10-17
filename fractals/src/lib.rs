@@ -67,7 +67,7 @@ pub extern "C" fn calculate_mandelbrot_vec_colored(
 
 /// Returns an RGB image as a vector.
 #[no_mangle]
-pub extern "C" fn calculate_newton_roots_of_unity(
+pub extern "C" fn calculate_newton_roots_of_unity_vec(
     x_min: F,
     x_max: F,
     y_min: F,
@@ -77,7 +77,7 @@ pub extern "C" fn calculate_newton_roots_of_unity(
 
     max_iters: u32,
     horison: F,
-    k: usize,
+    k: u32,
 
     from_angle: f32,
     to_angle: f32,

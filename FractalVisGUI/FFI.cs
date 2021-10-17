@@ -29,18 +29,27 @@ namespace FractalVisGUI
 
         [DllImport("fractal_calculator.dll")]
         public static extern FFIVec calculate_mandelbrot_vec_colored(
-            Double xMin,
-            Double xMax,
-            Double yMin,
-            Double yMax,
+            double xMin,
+            double xMax,
+            double yMin,
+            double yMax,
             uint width,
             uint height,
             uint maxIters,
-            Double horizon,
+            double horizon,
             float fromAngle,
             float toAngle,
             float saturation
         );
+
+        [DllImport("fractal_calculator.dll")]
+        public static extern FFIVec calculate_newton_roots_of_unity_vec(
+            double xMin, double xMax, double yMin, double yMax,
+            uint width, uint height,
+            uint maxIters, double horizon,
+            uint k,
+            float fromAngle, float toAngle,
+            float saturation);
 
         // ReSharper disable once InconsistentNaming
         public static byte[] FFIVecToArr(FFIVec vec) {
